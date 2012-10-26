@@ -29,23 +29,23 @@ namespace Text_classifier.Classification
             var allWords = wordCount.Values.Sum();
             var denominator = distinctWords + allWords;
 
-            zeroLogProbability = logLaplaceSmoothing(0, denominator);
+            zeroLogProbability = LogLaplaceSmoothing(0, denominator);
 
-            logProbabilities1 = calculateWordLogProbabilites(wordCount1, denominator);
-            logProbabilities2 = calculateWordLogProbabilites(wordCount2, denominator);
+            logProbabilities1 = CalculateWordLogProbabilites(wordCount1, denominator);
+            logProbabilities2 = CalculateWordLogProbabilites(wordCount2, denominator);
             isTrained = true;
         }
 
-        private IDictionary<string, double> calculateWordLogProbabilites(
+        private IDictionary<string, double> CalculateWordLogProbabilites(
             IDictionary<string, int> wordCount, int denominator)
         {
             var logProbabilities = new Dictionary<string, double>(wordCount.Count);
             foreach (var entry in wordCount)
-                logProbabilities[entry.Key] = logLaplaceSmoothing(entry.Value, denominator);
+                logProbabilities[entry.Key] = LogLaplaceSmoothing(entry.Value, denominator);
             return logProbabilities;
         }
 
-        double logLaplaceSmoothing(int count, int denominator)
+        double LogLaplaceSmoothing(int count, int denominator)
         {
             return Math.Log((1d + count) / denominator);
         }
@@ -56,10 +56,10 @@ namespace Text_classifier.Classification
                 throw new NotTrainedException();
             var tokens = new HashSet<string>(Utils.Tokenize(sample));
 
-            double logProb1 = calculateSampleLogProbability(tokens, logProbabilities1);
+            double logProb1 = CalculateSampleLogProbability(tokens, logProbabilities1);
             Console.WriteLine("Probability 1: " + Math.Exp(logProb1) + " = e^"+logProb1);
             
-            double logProb2 = calculateSampleLogProbability(tokens, logProbabilities2);
+            double logProb2 = CalculateSampleLogProbability(tokens, logProbabilities2);
             Console.WriteLine("Probability 2: " + Math.Exp(logProb2) + " = e^" + logProb2);
 
             // numerically safer calculation for (-1*p1 + 1*p2)/(p1 + p2)
@@ -71,7 +71,7 @@ namespace Text_classifier.Classification
             return result;
         }
 
-        private double calculateSampleLogProbability(HashSet<string> tokens, 
+        private double CalculateSampleLogProbability(HashSet<string> tokens, 
             IDictionary<string, double> logProbabilities)
         {
             double logProbability = 0d;

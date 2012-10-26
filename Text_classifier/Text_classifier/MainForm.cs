@@ -21,7 +21,7 @@ namespace Text_classifier
             InitializeComponent();
         }
 
-        private void updateTextBox(TextBox textBox)
+        private void UpdateTextBox(TextBox textBox)
         {
             var result = this.openFileDialog.ShowDialog();
             if (result == DialogResult.OK)
@@ -32,17 +32,17 @@ namespace Text_classifier
 
         private void text1Button_Click(object sender, EventArgs e)
         {
-            updateTextBox(this.text1TextBox);
+            UpdateTextBox(this.text1TextBox);
         }
 
         private void text2Button_Click(object sender, EventArgs e)
         {
-            updateTextBox(this.text2TextBox);
+            UpdateTextBox(this.text2TextBox);
         }
 
         private void sampleButton_Click(object sender, EventArgs e)
         {
-            updateTextBox(this.sampleTextBox);
+            UpdateTextBox(this.sampleTextBox);
         }
 
         private void trainButton_Click(object sender, EventArgs e)
