@@ -79,9 +79,11 @@ namespace Text_classifier
 
         private string LoadTextFile(string path)
         {
-            TextReader reader = new StreamReader(path);
-            var content = reader.ReadToEnd();
-            reader.Close();
+            string content;
+            using (TextReader reader = new StreamReader(path))
+            {
+               content = reader.ReadToEnd();
+            }
             return content;
         }
     }
