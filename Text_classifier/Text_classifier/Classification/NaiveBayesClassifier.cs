@@ -18,10 +18,10 @@ namespace Text_classifier.Classification
 
         void IClassifier.Train(string text1, string text2)
         {
-            var tokens = Utils.Tokenize(text1);
+            var tokens = Utils.ExtractWords(text1);
             var wordCount1 = Utils.CountWords(tokens);
 
-            tokens = Utils.Tokenize(text2);
+            tokens = Utils.ExtractWords(text2);
             var wordCount2 = Utils.CountWords(tokens);
 
             var wordCount = Utils.Add(wordCount1, wordCount2);
@@ -54,19 +54,19 @@ namespace Text_classifier.Classification
         {
             if (!isTrained)
                 throw new NotTrainedException();
-            var tokens = new HashSet<string>(Utils.Tokenize(sample));
+            var tokens = new HashSet<string>(Utils.ExtractWords(sample));
 
             double logProb1 = CalculateSampleLogProbability(tokens, logProbabilities1);
-            Console.WriteLine("Probability 1: " + Math.Exp(logProb1) + " = e^"+logProb1);
+            // Console.WriteLine("Probability 1: " + Math.Exp(logProb1) + " = e^"+logProb1);
             
             double logProb2 = CalculateSampleLogProbability(tokens, logProbabilities2);
-            Console.WriteLine("Probability 2: " + Math.Exp(logProb2) + " = e^" + logProb2);
+            // Console.WriteLine("Probability 2: " + Math.Exp(logProb2) + " = e^" + logProb2);
 
             // numerically safer calculation for (-1*p1 + 1*p2)/(p1 + p2)
             double logDiff = logProb1 - logProb2;
             double diff = Math.Exp(-Math.Abs(logDiff));
             double result = -Math.Sign(logDiff) * (1 - diff) / (1 + diff);
-            Console.WriteLine("Actual result: " + result);
+            // Console.WriteLine("Actual result: " + result);
 
             return result;
         }

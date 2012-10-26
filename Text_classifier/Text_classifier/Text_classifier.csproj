@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classification\BoostingClassifier.cs" />
     <Compile Include="Classification\Classifier.cs" />
     <Compile Include="Classification\NaiveBayesClassifier.cs" />
     <Compile Include="Classification\Utils.cs" />

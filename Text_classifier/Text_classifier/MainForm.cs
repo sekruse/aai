@@ -8,17 +8,22 @@ using System.Text;
 using System.Windows.Forms;
 using Text_classifier.Classification;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Text_classifier
 {
     public partial class MainForm : Form
     {
 
-        private IClassifier classifier = new NaiveBayesClassifier();
+        private IClassifier classifier;
 
         public MainForm()
         {
             InitializeComponent();
+            
+            var classifier = new BoostingClassifier();
+            classifier.Add(new NaiveBayesClassifier());
+            this.classifier = classifier;
         }
 
         private void UpdateTextBox(TextBox textBox)

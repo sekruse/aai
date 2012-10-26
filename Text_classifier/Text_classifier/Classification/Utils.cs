@@ -8,7 +8,7 @@ namespace Text_classifier.Classification
 {
     class Utils
     {
-        public static IEnumerable<string> Tokenize(string text)
+        public static IEnumerable<string> ExtractWords(string text)
         {
             var matches = Regex.Matches(text, @"\w+");
             var result = new string[matches.Count];
@@ -42,6 +42,13 @@ namespace Text_classifier.Classification
                 else
                     result[entry.Key] = entry.Value;
             }
+            return result;
+        }
+
+        internal static IEnumerable<string> ExtractSamples(string text)
+        {
+            Regex regex = new Regex(@"(?:\r\n)(?:\s*(?:\r\n))+");
+            var result = regex.Split(text).Where(s => !String.IsNullOrWhiteSpace(s));
             return result;
         }
     }
