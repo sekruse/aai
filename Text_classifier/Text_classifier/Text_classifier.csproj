@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classification\AverageWordLengthClassifier.cs" />
     <Compile Include="Classification\BoostingClassifier.cs" />
     <Compile Include="Classification\SentenceLengthClassifier.cs" />
     <Compile Include="Classification\Classifier.cs" />

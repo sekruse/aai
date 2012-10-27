@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Text_classifier.Classification
 {
-    class SentenceLengthClassifier: IClassifier
+    class AverageWordLengthClassifier : IClassifier
     {
         double mean1, mean2;
         double variance1, variance2;
@@ -13,9 +13,9 @@ namespace Text_classifier.Classification
 
         void IClassifier.Train(string text1, string text2)
         {
-            CalculateAverageSentenceLength(text1, out this.mean1, out this.variance1);
-            Console.WriteLine("Average length 1: " + mean1+ " (Varaiance: "+this.variance1+")");
-            CalculateAverageSentenceLength(text2, out this.mean2, out this.variance2);
+            CalculateAverageWordLength(text1, out this.mean1, out this.variance1);
+            Console.WriteLine("Average length 1: " + mean1 + " (Varaiance: " + this.variance1 + ")");
+            CalculateAverageWordLength(text2, out this.mean2, out this.variance2);
             Console.WriteLine("Average length 2: " + mean2 + " (Varaiance: " + this.variance2 + ")");
             this.isTrained = true;
         }
@@ -28,11 +28,11 @@ namespace Text_classifier.Classification
             double logProb2 = 0d;
             double logProb1 = 0d;
 
-            foreach (var sentence in Utils.ExtractSentences(text))
+            foreach (var word in Utils.ExtractWords(text))
             {
-                int sentenceLength = Utils.ExtractWords(sentence).Count();
-                logProb1 += Math.Log(NormalDistributionProbability(sentenceLength, this.mean1, this.variance1));
-                logProb2 += Math.Log(NormalDistributionProbability(sentenceLength, this.mean2, this.variance2));
+                int wordLength = word.Length;
+                logProb1 += Math.Log(NormalDistributionProbability(wordLength, this.mean1, this.variance1));
+                logProb2 += Math.Log(NormalDistributionProbability(wordLength, this.mean2, this.variance2));
             }
 
             // numerically safer calculation for (-1*p1 + 1*p2)/(p1 + p2)
@@ -44,22 +44,24 @@ namespace Text_classifier.Classification
             return result;
         }
 
-        private void CalculateAverageSentenceLength(string text, out double mean, out double variance)
+        private void CalculateAverageWordLength(string text, out double mean, out double variance)
         {
-            var sentences = Utils.ExtractSentences(text);
+            var words = Utils.ExtractWords(text);
             mean = 0d;
             variance = 0d;
-            foreach (var sentence in sentences)
-                mean += Utils.ExtractWords(sentence).Count();
-            mean /= sentences.Count();
-            foreach (var sentence in sentences)
-                variance += Math.Pow(Utils.ExtractWords(sentence).Count() - mean, 2);
-            variance /= sentences.Count();
+            foreach (var word in words)
+                mean += word.Length;
+            mean /= words.Count();
+            foreach (var word in words)
+                variance += Math.Pow(word.Length - mean, 2);
+            variance /= words.Count();
         }
 
         private double NormalDistributionProbability(double x, double mean, double variance)
         {
             return Math.Exp(-0.5 * Math.Pow(x - mean, 2) / variance) / (Math.Sqrt(variance * 2 * Math.PI));
         }
+
+
     }
 }

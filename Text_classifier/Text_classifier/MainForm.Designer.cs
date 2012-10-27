@@ -46,10 +46,6 @@
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // openFileDialog
-            // 
-            this.openFileDialog.FileName = "openFileDialog";
-            // 
             // text1Button
             // 
             this.text1Button.Location = new System.Drawing.Point(279, 22);

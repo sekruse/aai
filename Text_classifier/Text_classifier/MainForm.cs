@@ -24,8 +24,10 @@ namespace Text_classifier
             var classifier = new BoostingClassifier();
             classifier.Add(new NaiveBayesClassifier());
             classifier.Add(new SentenceLengthClassifier());
+            classifier.Add(new AverageWordLengthClassifier());
+
             this.classifier = classifier;
-           // this.classifier = new SentenceLengthClassifier();
+            // this.classifier = new SentenceLengthClassifier();
         }
 
         private void UpdateTextBox(TextBox textBox)

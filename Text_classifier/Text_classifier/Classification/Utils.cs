@@ -17,7 +17,7 @@ namespace Text_classifier.Classification
             var result = new string[matches.Count];
             int i = 0;
             foreach (Match match in matches)
-                result[i++] = text.Substring(match.Index, match.Length);
+                result[i++] = match.Value;
             return result;
         }
 
@@ -51,6 +51,23 @@ namespace Text_classifier.Classification
         public static IEnumerable<string> ExtractSamples(string text)
         {
             return Split(text, SectionRegex);
+        }
+
+        public static int CharacterNo(string text, char character)
+        {
+            int result = 0;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if()
+                {
+                    result++;
+                }
+                
+            }
+         
+            
+            return result;
         }
 
         public static IEnumerable<string> ExtractSentences(string text)
