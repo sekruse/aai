@@ -7,16 +7,37 @@ namespace Text_classifier.Classification
 {
     class PunctuationClassifier : IClassifier
     {
-        int apostrCount1, apostrCount2;
+        public const int PerWord = 0;
+        public const int PerSentence = 1;
+
+        int punctuationCount1, punctuationCount2;
         int sentenceCount1, sentenceCount2;
         bool isTrained = false;
+        bool perWord;
+        char punctuationChar;
+
+        public PunctuationClassifier(char punctuationChar, int options)
+        {
+            this.punctuationChar = punctuationChar;
+            switch (options)
+            {
+                case PerSentence:
+                    perWord = false;
+                    break;
+                case PerWord:
+                    perWord = true;
+                    break;
+                default:
+                    throw new ArgumentException("Illegal options: " + options);
+            }
+        }
 
         void IClassifier.Train(string text1, string text2)
         {
-            CalculateAverageApostropheRatio(text1, out this.apostrCount1, out this.sentenceCount1);
-            Console.WriteLine("Apostrophe ratio (per sentence) 1 is: " + (double) apostrCount1/sentenceCount1);
-            CalculateAverageApostropheRatio(text2, out this.apostrCount2, out this.sentenceCount2);
-            Console.WriteLine("Apostrophe ratio (per sentence) 2 is: " + (double)apostrCount2 / sentenceCount2);
+            CalculateAveragePunctuationRatio(text1, out this.punctuationCount1, out this.sentenceCount1, this.punctuationChar, this.perWord);
+            Console.WriteLine("Punctuation ratio (per sentence) 1 is: " + (double) punctuationCount1/sentenceCount1);
+            CalculateAveragePunctuationRatio(text2, out this.punctuationCount2, out this.sentenceCount2, this.punctuationChar, this.perWord);
+            Console.WriteLine("Punctuation ratio (per sentence) 2 is: " + (double)punctuationCount2 / sentenceCount2);
 
             this.isTrained = true;
         }
@@ -26,11 +47,11 @@ namespace Text_classifier.Classification
             if (!this.isTrained)
                 throw new NotTrainedException();
 
-            double prob1 = (double) this.apostrCount1 / this.sentenceCount1;
-            double prob2 = (double) this.apostrCount2 / this.sentenceCount2;
+            double prob1 = (double) this.punctuationCount1 / this.sentenceCount1;
+            double prob2 = (double) this.punctuationCount2 / this.sentenceCount2;
 
             int apostrCount, sentenceCount;
-            CalculateAverageApostropheRatio(text, out apostrCount, out sentenceCount);
+            CalculateAveragePunctuationRatio(text, out apostrCount, out sentenceCount, this.punctuationChar, this.perWord);
             double prob3 = (double)apostrCount / sentenceCount;
 
             double diff13 = Math.Abs(prob1 - prob3);
@@ -43,10 +64,10 @@ namespace Text_classifier.Classification
             return result;
         }
 
-        private void CalculateAverageApostropheRatio(string text, out int apostrCount, out int sentenceCount)
+        private void CalculateAveragePunctuationRatio(string text, out int apostrCount, out int relativeCount, char punctuationChar, bool perWord)
         {
-            apostrCount = Utils.CharacterNo(text, '\'');
-            sentenceCount = Utils.ExtractSentences(text).Count();
+            apostrCount = Utils.CharacterNo(text, punctuationChar);
+            relativeCount = (perWord ? Utils.ExtractWords(text) : Utils.ExtractSentences(text)).Count();
         }
 
 

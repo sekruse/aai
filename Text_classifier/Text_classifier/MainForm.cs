@@ -28,7 +28,9 @@ namespace Text_classifier
             classifier.Add(new NaiveBayesClassifier(stopWords));
             classifier.Add(new SentenceLengthClassifier());
             classifier.Add(new AverageWordLengthClassifier());
-            classifier.Add(new PunctuationClassifier());
+            classifier.Add(new PunctuationClassifier('\'', PunctuationClassifier.PerWord));
+            classifier.Add(new PunctuationClassifier('?', PunctuationClassifier.PerSentence));
+            classifier.Add(new PunctuationClassifier('!', PunctuationClassifier.PerSentence));
 
             this.classifier = classifier;
             // this.classifier = new SentenceLengthClassifier();
