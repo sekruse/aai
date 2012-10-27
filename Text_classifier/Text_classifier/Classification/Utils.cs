@@ -8,6 +8,9 @@ namespace Text_classifier.Classification
 {
     class Utils
     {
+        private static Regex SectionRegex = new Regex(@"(?:\r?\n)(?:\s*(?:\r?\n))+");
+        private static Regex SentenceRegex = new Regex(@"[\.!\?]");
+
         public static IEnumerable<string> ExtractWords(string text)
         {
             var matches = Regex.Matches(text, @"\w+");
@@ -45,11 +48,22 @@ namespace Text_classifier.Classification
             return result;
         }
 
-        internal static IEnumerable<string> ExtractSamples(string text)
+        public static IEnumerable<string> ExtractSamples(string text)
         {
-            Regex regex = new Regex(@"(?:\r\n)(?:\s*(?:\r\n))+");
+            return Split(text, SectionRegex);
+        }
+
+        public static IEnumerable<string> ExtractSentences(string text)
+        {
+            return Split(text, SentenceRegex);
+        }
+
+        private static IEnumerable<string> Split(string text, Regex regex)
+        {
             var result = regex.Split(text).Where(s => !String.IsNullOrWhiteSpace(s));
             return result;
         }
+
+
     }
 }

@@ -19,6 +19,7 @@ namespace Text_classifier.Classification
         {
             if (this.subclassifiers.Count == 0)
                 throw new Exception("No subclassifiers for boosting");
+            this.weights.RemoveAll(e => true);
             foreach (var subclassfier in this.subclassifiers)
                 subclassfier.Train(text1, text2);
 
@@ -30,24 +31,33 @@ namespace Text_classifier.Classification
             for (int i = 0; i < loss.Count(); i++)
                 loss[i] = 1d / loss.Count();
             double error = 0d;
+            int debugError = 0;
             for (int i = 0; i < samples.Count(); i++)
             {
                 double estimate = subclassifiers[0].Classify(samples[i].Text);
                 error += Math.Abs((estimate - samples[i].Class) / 2) * loss[i];
+                if (Math.Sign(estimate) != samples[i].Class) debugError++;
             }
             weights.Add(ComputeWeight(error));
+            Console.WriteLine("Classifier 0 made " + debugError + "/" + samples.Count() + " errors");
 
             // Compute the remaining weights.
-            for (int i = 1; i < samples.Count(); i++)
+            for (int i = 1; i < this.subclassifiers.Count(); i++)
             {
+                var subclassifier = subclassifiers[i];
                 error = 0d;
+                debugError = 0;
                 for (int j = 0; j < samples.Count(); j++)
                 {
-                    double estimate = subclassifiers[0].Classify(samples[j].Text);
-                    loss[j] = loss[j] * Math.Exp(-samples[j].Class * weights.Last() * estimate);
-                    error += Math.Abs((estimate - samples[j].Class) / 2) * loss[j];
+                    var sample = samples[j];
+                    double estimate = subclassifier.Classify(sample.Text);
+                    loss[j] = loss[j] * Math.Exp(-sample.Class * weights.Last() * estimate);
+                    error += Math.Abs((estimate - sample.Class) / 2) * loss[j];
+                    if (Math.Sign(estimate) != sample.Class) 
+                        debugError++;
                 }
                 weights.Add(ComputeWeight(error));
+                Console.WriteLine("Classifier " + i + " made " + debugError + "/" + samples.Count() + " errors");
             }
 
         }

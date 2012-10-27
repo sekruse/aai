@@ -23,7 +23,9 @@ namespace Text_classifier
             
             var classifier = new BoostingClassifier();
             classifier.Add(new NaiveBayesClassifier());
+            classifier.Add(new SentenceLengthClassifier());
             this.classifier = classifier;
+           // this.classifier = new SentenceLengthClassifier();
         }
 
         private void UpdateTextBox(TextBox textBox)
@@ -72,7 +74,7 @@ namespace Text_classifier
             try
             {
                 var result = classifier.Classify(LoadTextFile(this.sampleTextBox.Text));
-                MessageBox.Show(this, "Classification result: " + (result == -1 ? "Text 1" : "Text 2"), 
+                MessageBox.Show(this, "Classification result: " + (result < 0 ? "Text 1" : "Text 2"), 
                     "Classification", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

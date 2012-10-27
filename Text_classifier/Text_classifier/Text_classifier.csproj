@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classification\BoostingClassifier.cs" />
+    <Compile Include="Classification\SentenceLengthClassifier.cs" />
     <Compile Include="Classification\Classifier.cs" />
     <Compile Include="Classification\NaiveBayesClassifier.cs" />
     <Compile Include="Classification\Utils.cs" />
