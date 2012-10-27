@@ -17,7 +17,7 @@ namespace Text_classifier.Classification
             var result = new string[matches.Count];
             int i = 0;
             foreach (Match match in matches)
-                result[i++] = match.Value;
+                result[i++] = match.Value.ToLower();
             return result;
         }
 
@@ -57,16 +57,12 @@ namespace Text_classifier.Classification
         {
             int result = 0;
 
-            for (int i = 0; i < text.Length; i++)
+            foreach(char c in text)
             {
-                if()
-                {
+                if(c.Equals(character))
                     result++;
-                }
-                
             }
-         
-            
+
             return result;
         }
 

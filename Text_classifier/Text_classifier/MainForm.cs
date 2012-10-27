@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Text_classifier.Classification;
 using System.IO;
 using System.Text.RegularExpressions;
+using Text_classifier.Resources;
 
 namespace Text_classifier
 {
@@ -20,11 +21,14 @@ namespace Text_classifier
         public MainForm()
         {
             InitializeComponent();
-            
+
+            var stopWords = Regex.Split(Stopwords.StopWords, @"\r\n");
+
             var classifier = new BoostingClassifier();
-            classifier.Add(new NaiveBayesClassifier());
+            classifier.Add(new NaiveBayesClassifier(stopWords));
             classifier.Add(new SentenceLengthClassifier());
             classifier.Add(new AverageWordLengthClassifier());
+            classifier.Add(new PunctuationClassifier());
 
             this.classifier = classifier;
             // this.classifier = new SentenceLengthClassifier();

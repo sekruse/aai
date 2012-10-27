@@ -7,16 +7,17 @@ namespace Text_classifier.Classification
 {
     class PunctuationClassifier : IClassifier
     {
-        double mean1, mean2;
-        double variance1, variance2;
+        int apostrCount1, apostrCount2;
+        int sentenceCount1, sentenceCount2;
         bool isTrained = false;
 
         void IClassifier.Train(string text1, string text2)
         {
-            CalculateAverageApostropheRatio(text1, out this.mean1, out this.variance1);
-            Console.WriteLine("Average length 1: " + mean1 + " (Varaiance: " + this.variance1 + ")");
-            CalculateAverageApostropheRatio(text2, out this.mean2, out this.variance2);
-            Console.WriteLine("Average length 2: " + mean2 + " (Varaiance: " + this.variance2 + ")");
+            CalculateAverageApostropheRatio(text1, out this.apostrCount1, out this.sentenceCount1);
+            Console.WriteLine("Apostrophe ratio (per sentence) 1 is: " + (double) apostrCount1/sentenceCount1);
+            CalculateAverageApostropheRatio(text2, out this.apostrCount2, out this.sentenceCount2);
+            Console.WriteLine("Apostrophe ratio (per sentence) 2 is: " + (double)apostrCount2 / sentenceCount2);
+
             this.isTrained = true;
         }
 
@@ -25,37 +26,29 @@ namespace Text_classifier.Classification
             if (!this.isTrained)
                 throw new NotTrainedException();
 
-            double logProb2 = 0d;
-            double logProb1 = 0d;
+            double prob1 = (double) this.apostrCount1 / this.sentenceCount1;
+            double prob2 = (double) this.apostrCount2 / this.sentenceCount2;
 
-            foreach (var word in Utils.ExtractWords(text))
-            {
-                int wordLength = word.Length;
-                logProb1 += Math.Log(NormalDistributionProbability(wordLength, this.mean1, this.variance1));
-                logProb2 += Math.Log(NormalDistributionProbability(wordLength, this.mean2, this.variance2));
-            }
+            int apostrCount, sentenceCount;
+            CalculateAverageApostropheRatio(text, out apostrCount, out sentenceCount);
+            double prob3 = (double)apostrCount / sentenceCount;
 
-            // numerically safer calculation for (-1*p1 + 1*p2)/(p1 + p2)
-            double logDiff = logProb1 - logProb2;
-            double diff = Math.Exp(-Math.Abs(logDiff));
-            double result = -Math.Sign(logDiff) * (1 - diff) / (1 + diff);
-            // Console.WriteLine("Actual result: " + result);
+            double diff13 = Math.Abs(prob1 - prob3);
+            double diff23 = Math.Abs(prob2 - prob3);
 
+            // the result will be the smaller value
+            double result = diff13 < diff23 ? -1 : 1;
+
+                        
             return result;
         }
 
-        private void CalculateAverageApostropheRatio(string text, out double mean, out double variance)
+        private void CalculateAverageApostropheRatio(string text, out int apostrCount, out int sentenceCount)
         {
-            var words = Utils.ExtractWords(text);
-            mean = 0d;
-            variance = 0d;
-            foreach (var word in words)
-                mean += word.Length;
-            mean /= words.Count();
-            foreach (var word in words)
-                variance += Math.Pow(word.Length - mean, 2);
-            variance /= words.Count();
+            apostrCount = Utils.CharacterNo(text, '\'');
+            sentenceCount = Utils.ExtractSentences(text).Count();
         }
+
 
         private double NormalDistributionProbability(double x, double mean, double variance)
         {

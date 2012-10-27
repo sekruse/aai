@@ -72,16 +72,25 @@ namespace Text_classifier.Classification
             int i = 0;
             foreach (var subclassifier in subclassifiers)
             {
-                double classifierErrors = 0d;
+                double squareRootMeanError = 0d;
+                int debugError = 0; i++;
                 foreach (var samplePoint in samples)
                 {
                     var estimate = subclassifier.Classify(samplePoint.Text);
                     var error = samplePoint.Class - estimate;
-                    classifierErrors += error * error;
+                    squareRootMeanError += error * error;
+                    if (Math.Abs(error) >= 1) debugError++;
                 }
-                squaredErrors[i++] = classifierErrors;
+                squareRootMeanError = Math.Sqrt(squareRootMeanError / samples.Count());
+                // weights.Add(1 - squareRootMeanError);
+                weights.Add(samples.Count() / 2d - debugError);
+                Console.WriteLine("Classifier " + i + ":");
+                Console.WriteLine("  " + debugError + "/" + samples.Count() + " errors");
+                Console.WriteLine("  " + squareRootMeanError + " -> " + weights.Last());  
+                //squaredErrors[i++] = squareRootMeanError;
             }
 
+            /*
             // Weight them by their error rate.
             double errorSum = squaredErrors.Sum();
             foreach (var error in squaredErrors)
@@ -92,6 +101,7 @@ namespace Text_classifier.Classification
                 Console.WriteLine(errorShare + "->" + weight);             
                 weights.Add(weight);
             }
+             * */
         }
    
 

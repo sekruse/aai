@@ -15,39 +15,47 @@ namespace Text_classifier.Classification
         private bool isTrained = false;
         private IDictionary<string, double> logProbabilities1, logProbabilities2;
         private double zeroLogProbability;
+        private HashSet<string> stopWords;
+
+        public NaiveBayesClassifier(string[] stopWords)
+        {
+            this.stopWords = new HashSet<string>(stopWords);
+        }
 
         void IClassifier.Train(string text1, string text2)
         {
-            var tokens = Utils.ExtractWords(text1);
-            var wordCount1 = Utils.CountWords(tokens);
+            var tokens1 = Utils.ExtractWords(text1).Where(e => !this.stopWords.Contains(e));
+            var wordCount1 = Utils.CountWords(tokens1);
+            var allWords1 = wordCount1.Values.Sum();
 
-            tokens = Utils.ExtractWords(text2);
-            var wordCount2 = Utils.CountWords(tokens);
+            var tokens2 = Utils.ExtractWords(text2).Where(e => !this.stopWords.Contains(e));
+            var wordCount2 = Utils.CountWords(tokens2);
+            var allWords2 = wordCount2.Values.Sum();
 
-            var wordCount = Utils.Add(wordCount1, wordCount2);
-            var distinctWords = wordCount.Count;
-            var allWords = wordCount.Values.Sum();
-            var denominator = distinctWords + allWords;
+            var distinctWords = wordCount1.Keys.Union(wordCount2.Keys).Count();
+            var denominator = distinctWords + allWords1;
 
-            zeroLogProbability = LogLaplaceSmoothing(0, denominator);
+            this.zeroLogProbability = LogLaplaceSmoothing(0, denominator, 1d);
+            this.logProbabilities1 = CalculateWordLogProbabilites(wordCount1, denominator, 1d);
+            
+            double correctionFactor = allWords1 / (double)allWords2;
+            this.logProbabilities2 = CalculateWordLogProbabilites(wordCount2, denominator, correctionFactor);
 
-            logProbabilities1 = CalculateWordLogProbabilites(wordCount1, denominator);
-            logProbabilities2 = CalculateWordLogProbabilites(wordCount2, denominator);
             isTrained = true;
         }
 
         private IDictionary<string, double> CalculateWordLogProbabilites(
-            IDictionary<string, int> wordCount, int denominator)
+            IDictionary<string, int> wordCount, int denominator, double correctionFactor)
         {
             var logProbabilities = new Dictionary<string, double>(wordCount.Count);
             foreach (var entry in wordCount)
-                logProbabilities[entry.Key] = LogLaplaceSmoothing(entry.Value, denominator);
+                logProbabilities[entry.Key] = LogLaplaceSmoothing(entry.Value, denominator, correctionFactor);
             return logProbabilities;
         }
 
-        double LogLaplaceSmoothing(int count, int denominator)
+        double LogLaplaceSmoothing(int count, int denominator, double correctionFactor)
         {
-            return Math.Log((1d + count) / denominator);
+            return Math.Log((1d + correctionFactor * count) / denominator);
         }
 
         double IClassifier.Classify(string sample)
@@ -55,11 +63,12 @@ namespace Text_classifier.Classification
             if (!isTrained)
                 throw new NotTrainedException();
             var tokens = new HashSet<string>(Utils.ExtractWords(sample));
+            tokens.RemoveWhere(e => this.stopWords.Contains(e));
 
-            double logProb1 = CalculateSampleLogProbability(tokens, logProbabilities1);
+            double logProb1 = CalculateSampleLogProbability(tokens, this.logProbabilities1);
             // Console.WriteLine("Probability 1: " + Math.Exp(logProb1) + " = e^"+logProb1);
             
-            double logProb2 = CalculateSampleLogProbability(tokens, logProbabilities2);
+            double logProb2 = CalculateSampleLogProbability(tokens, this.logProbabilities2);
             // Console.WriteLine("Probability 2: " + Math.Exp(logProb2) + " = e^" + logProb2);
 
             // numerically safer calculation for (-1*p1 + 1*p2)/(p1 + p2)
@@ -77,10 +86,9 @@ namespace Text_classifier.Classification
             double logProbability = 0d;
             foreach (var token in tokens)
             {
-                if (logProbabilities.ContainsKey(token))
-                    logProbability += logProbabilities[token];
-                else
-                    logProbability += zeroLogProbability;
+                 logProbability += logProbabilities.ContainsKey(token) ?
+                    logProbability += logProbabilities[token] :
+                    logProbability += this.zeroLogProbability;
             }
             return logProbability;
         }
