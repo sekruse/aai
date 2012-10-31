@@ -83,7 +83,7 @@ namespace Text_classifier.Classification
                 }
                 squareRootMeanError = Math.Sqrt(squareRootMeanError / samples.Count());
                 // weights.Add(1 - squareRootMeanError);
-                weights.Add(samples.Count() / 2d - debugError);
+                weights.Add(Math.Pow(Math.Max(0, (samples.Count() / 2d - debugError) / samples.Count()), 2));
                 Console.WriteLine("Classifier " + i + ":");
                 Console.WriteLine("  " + debugError + "/" + samples.Count() + " errors");
                 Console.WriteLine("  " + squareRootMeanError + " -> " + weights.Last());  

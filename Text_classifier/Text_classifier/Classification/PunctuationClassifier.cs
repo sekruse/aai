@@ -58,7 +58,8 @@ namespace Text_classifier.Classification
             double diff23 = Math.Abs(prob2 - prob3);
 
             // the result will be the smaller value
-            double result = diff13 < diff23 ? -1 : 1;
+            double result = diff13 == diff23 ? 0d : (diff13 - diff23) / (diff13 + diff23);
+                // diff13 < diff23 ? -1 : 1;
 
                         
             return result;
