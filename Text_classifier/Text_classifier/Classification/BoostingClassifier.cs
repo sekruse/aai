@@ -84,9 +84,9 @@ namespace Text_classifier.Classification
                 squareRootMeanError = Math.Sqrt(squareRootMeanError / samples.Count());
                 // weights.Add(1 - squareRootMeanError);
                 weights.Add(Math.Pow(Math.Max(0, (samples.Count() / 2d - debugError) / samples.Count()), 2));
-                Console.WriteLine("Classifier " + i + ":");
-                Console.WriteLine("  " + debugError + "/" + samples.Count() + " errors");
-                Console.WriteLine("  " + squareRootMeanError + " -> " + weights.Last());  
+                // Console.WriteLine("Classifier " + i + ":");
+                // Console.WriteLine("  " + debugError + "/" + samples.Count() + " errors");
+                // Console.WriteLine("  " + squareRootMeanError + " -> " + weights.Last());  
                 //squaredErrors[i++] = squareRootMeanError;
             }
 
@@ -117,10 +117,12 @@ namespace Text_classifier.Classification
                 var subclassifier = this.subclassifiers[i];
                 var subresult = subclassifier.Classify(sample);
                 result += weight * subresult;
-                Console.WriteLine("Classifier " + i + " voted: " + subresult);
+                // Console.WriteLine("Classifier " + i + " voted: " + subresult);
             }
-            result /= weights.Sum();
-            Console.WriteLine("Overall result: " + result);
+            var weightsSum = weights.Sum();
+            if (weightsSum != 0)
+                result /= weights.Sum();
+            // Console.WriteLine("Overall result: " + result);
             return result;
         }
 

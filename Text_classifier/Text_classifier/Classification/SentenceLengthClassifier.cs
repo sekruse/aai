@@ -14,9 +14,9 @@ namespace Text_classifier.Classification
         void IClassifier.Train(string text1, string text2)
         {
             CalculateAverageSentenceLength(text1, out this.mean1, out this.variance1);
-            Console.WriteLine("Average sentence length 1: " + mean1+ " (Varaiance: "+this.variance1+")");
+            // Console.WriteLine("Average sentence length 1: " + mean1+ " (Varaiance: "+this.variance1+")");
             CalculateAverageSentenceLength(text2, out this.mean2, out this.variance2);
-            Console.WriteLine("Average sentence length 2: " + mean2 + " (Varaiance: " + this.variance2 + ")");
+            // Console.WriteLine("Average sentence length 2: " + mean2 + " (Varaiance: " + this.variance2 + ")");
             this.isTrained = true;
         }
 

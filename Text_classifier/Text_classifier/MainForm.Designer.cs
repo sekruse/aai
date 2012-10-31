@@ -31,6 +31,7 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.text1Button = new System.Windows.Forms.Button();
             this.trainingBox = new System.Windows.Forms.GroupBox();
+            this.validateButton = new System.Windows.Forms.Button();
             this.trainButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -42,8 +43,16 @@
             this.sampleButton = new System.Windows.Forms.Button();
             this.sampleTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.apostropheCheckBox = new System.Windows.Forms.CheckBox();
+            this.exclamationMarkCheckBox = new System.Windows.Forms.CheckBox();
+            this.questionMarkCheckBox = new System.Windows.Forms.CheckBox();
+            this.sentenceLengthCheckBox = new System.Windows.Forms.CheckBox();
+            this.wordLengthCheckBox = new System.Windows.Forms.CheckBox();
+            this.naiveBayesCheckBox = new System.Windows.Forms.CheckBox();
             this.trainingBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // text1Button
@@ -58,6 +67,7 @@
             // 
             // trainingBox
             // 
+            this.trainingBox.Controls.Add(this.validateButton);
             this.trainingBox.Controls.Add(this.trainButton);
             this.trainingBox.Controls.Add(this.label2);
             this.trainingBox.Controls.Add(this.label1);
@@ -65,12 +75,22 @@
             this.trainingBox.Controls.Add(this.text1TextBox);
             this.trainingBox.Controls.Add(this.text2Button);
             this.trainingBox.Controls.Add(this.text1Button);
-            this.trainingBox.Location = new System.Drawing.Point(12, 12);
+            this.trainingBox.Location = new System.Drawing.Point(12, 115);
             this.trainingBox.Name = "trainingBox";
-            this.trainingBox.Size = new System.Drawing.Size(360, 110);
+            this.trainingBox.Size = new System.Drawing.Size(360, 114);
             this.trainingBox.TabIndex = 1;
             this.trainingBox.TabStop = false;
             this.trainingBox.Text = "Training";
+            // 
+            // validateButton
+            // 
+            this.validateButton.Location = new System.Drawing.Point(90, 79);
+            this.validateButton.Name = "validateButton";
+            this.validateButton.Size = new System.Drawing.Size(90, 23);
+            this.validateButton.TabIndex = 7;
+            this.validateButton.Text = "Cross Validate";
+            this.validateButton.UseVisualStyleBackColor = true;
+            this.validateButton.Click += new System.EventHandler(this.validateButton_Click);
             // 
             // trainButton
             // 
@@ -130,9 +150,9 @@
             this.groupBox1.Controls.Add(this.sampleButton);
             this.groupBox1.Controls.Add(this.sampleTextBox);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(12, 128);
+            this.groupBox1.Location = new System.Drawing.Point(12, 235);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(360, 78);
+            this.groupBox1.Size = new System.Drawing.Size(360, 86);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Classification";
@@ -173,11 +193,89 @@
             this.label3.TabIndex = 7;
             this.label3.Text = "Sample";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.apostropheCheckBox);
+            this.groupBox2.Controls.Add(this.exclamationMarkCheckBox);
+            this.groupBox2.Controls.Add(this.questionMarkCheckBox);
+            this.groupBox2.Controls.Add(this.sentenceLengthCheckBox);
+            this.groupBox2.Controls.Add(this.wordLengthCheckBox);
+            this.groupBox2.Controls.Add(this.naiveBayesCheckBox);
+            this.groupBox2.Location = new System.Drawing.Point(12, 13);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(354, 96);
+            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Classifier";
+            // 
+            // apostropheCheckBox
+            // 
+            this.apostropheCheckBox.AutoSize = true;
+            this.apostropheCheckBox.Location = new System.Drawing.Point(187, 66);
+            this.apostropheCheckBox.Name = "apostropheCheckBox";
+            this.apostropheCheckBox.Size = new System.Drawing.Size(85, 17);
+            this.apostropheCheckBox.TabIndex = 5;
+            this.apostropheCheckBox.Text = "Apostrophes";
+            this.apostropheCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // exclamationMarkCheckBox
+            // 
+            this.exclamationMarkCheckBox.AutoSize = true;
+            this.exclamationMarkCheckBox.Location = new System.Drawing.Point(187, 43);
+            this.exclamationMarkCheckBox.Name = "exclamationMarkCheckBox";
+            this.exclamationMarkCheckBox.Size = new System.Drawing.Size(115, 17);
+            this.exclamationMarkCheckBox.TabIndex = 4;
+            this.exclamationMarkCheckBox.Text = "Exclamation Marks";
+            this.exclamationMarkCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // questionMarkCheckBox
+            // 
+            this.questionMarkCheckBox.AutoSize = true;
+            this.questionMarkCheckBox.Location = new System.Drawing.Point(187, 19);
+            this.questionMarkCheckBox.Name = "questionMarkCheckBox";
+            this.questionMarkCheckBox.Size = new System.Drawing.Size(105, 17);
+            this.questionMarkCheckBox.TabIndex = 3;
+            this.questionMarkCheckBox.Text = "Questions Marks";
+            this.questionMarkCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // sentenceLengthCheckBox
+            // 
+            this.sentenceLengthCheckBox.AutoSize = true;
+            this.sentenceLengthCheckBox.Location = new System.Drawing.Point(9, 66);
+            this.sentenceLengthCheckBox.Name = "sentenceLengthCheckBox";
+            this.sentenceLengthCheckBox.Size = new System.Drawing.Size(108, 17);
+            this.sentenceLengthCheckBox.TabIndex = 2;
+            this.sentenceLengthCheckBox.Text = "Sentence Length";
+            this.sentenceLengthCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // wordLengthCheckBox
+            // 
+            this.wordLengthCheckBox.AutoSize = true;
+            this.wordLengthCheckBox.Location = new System.Drawing.Point(9, 43);
+            this.wordLengthCheckBox.Name = "wordLengthCheckBox";
+            this.wordLengthCheckBox.Size = new System.Drawing.Size(88, 17);
+            this.wordLengthCheckBox.TabIndex = 1;
+            this.wordLengthCheckBox.Text = "Word Length";
+            this.wordLengthCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // naiveBayesCheckBox
+            // 
+            this.naiveBayesCheckBox.AutoSize = true;
+            this.naiveBayesCheckBox.Checked = true;
+            this.naiveBayesCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.naiveBayesCheckBox.Location = new System.Drawing.Point(9, 19);
+            this.naiveBayesCheckBox.Name = "naiveBayesCheckBox";
+            this.naiveBayesCheckBox.Size = new System.Drawing.Size(86, 17);
+            this.naiveBayesCheckBox.TabIndex = 0;
+            this.naiveBayesCheckBox.Text = "Naive Bayes";
+            this.naiveBayesCheckBox.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(387, 223);
+            this.ClientSize = new System.Drawing.Size(388, 330);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.trainingBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -188,6 +286,8 @@
             this.trainingBox.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -208,6 +308,14 @@
         private System.Windows.Forms.Button sampleButton;
         private System.Windows.Forms.TextBox sampleTextBox;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button validateButton;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox questionMarkCheckBox;
+        private System.Windows.Forms.CheckBox sentenceLengthCheckBox;
+        private System.Windows.Forms.CheckBox wordLengthCheckBox;
+        private System.Windows.Forms.CheckBox naiveBayesCheckBox;
+        private System.Windows.Forms.CheckBox apostropheCheckBox;
+        private System.Windows.Forms.CheckBox exclamationMarkCheckBox;
     }
 }
 

@@ -35,9 +35,9 @@ namespace Text_classifier.Classification
         void IClassifier.Train(string text1, string text2)
         {
             CalculateAveragePunctuationRatio(text1, out this.punctuationCount1, out this.sentenceCount1, this.punctuationChar, this.perWord);
-            Console.WriteLine("Punctuation ratio (per sentence) 1 is: " + (double) punctuationCount1/sentenceCount1);
+            // Console.WriteLine("Punctuation ratio (per sentence) 1 is: " + (double) punctuationCount1/sentenceCount1);
             CalculateAveragePunctuationRatio(text2, out this.punctuationCount2, out this.sentenceCount2, this.punctuationChar, this.perWord);
-            Console.WriteLine("Punctuation ratio (per sentence) 2 is: " + (double)punctuationCount2 / sentenceCount2);
+            // Console.WriteLine("Punctuation ratio (per sentence) 2 is: " + (double)punctuationCount2 / sentenceCount2);
 
             this.isTrained = true;
         }
