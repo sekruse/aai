@@ -14,9 +14,7 @@ namespace Text_classifier.Classification
         void IClassifier.Train(string text1, string text2)
         {
             CalculateAverageSentenceLength(text1, out this.mean1, out this.variance1);
-            // Console.WriteLine("Average sentence length 1: " + mean1+ " (Varaiance: "+this.variance1+")");
             CalculateAverageSentenceLength(text2, out this.mean2, out this.variance2);
-            // Console.WriteLine("Average sentence length 2: " + mean2 + " (Varaiance: " + this.variance2 + ")");
             this.isTrained = true;
         }
 
@@ -39,7 +37,6 @@ namespace Text_classifier.Classification
             double logDiff = logProb1 - logProb2;
             double diff = Math.Exp(-Math.Abs(logDiff));
             double result = -Math.Sign(logDiff) * (1 - diff) / (1 + diff);
-            // Console.WriteLine("Actual result: " + result);
 
             return result;
         }

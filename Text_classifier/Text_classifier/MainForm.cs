@@ -34,7 +34,6 @@ namespace Text_classifier
             classifier.Add(new PunctuationClassifier('!', PunctuationClassifier.PerSentence));
 
             this.classifier = classifier;
-            // this.classifier = new SentenceLengthClassifier();
         }
 
         private IClassifier CreateClassifier()

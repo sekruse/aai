@@ -35,10 +35,7 @@ namespace Text_classifier.Classification
         void IClassifier.Train(string text1, string text2)
         {
             CalculateAveragePunctuationRatio(text1, out this.punctuationCount1, out this.sentenceCount1, this.punctuationChar, this.perWord);
-            // Console.WriteLine("Punctuation ratio (per sentence) 1 is: " + (double) punctuationCount1/sentenceCount1);
             CalculateAveragePunctuationRatio(text2, out this.punctuationCount2, out this.sentenceCount2, this.punctuationChar, this.perWord);
-            // Console.WriteLine("Punctuation ratio (per sentence) 2 is: " + (double)punctuationCount2 / sentenceCount2);
-
             this.isTrained = true;
         }
 
@@ -59,9 +56,6 @@ namespace Text_classifier.Classification
 
             // the result will be the smaller value
             double result = diff13 == diff23 ? 0d : (diff13 - diff23) / (diff13 + diff23);
-                // diff13 < diff23 ? -1 : 1;
-
-                        
             return result;
         }
 
@@ -69,12 +63,6 @@ namespace Text_classifier.Classification
         {
             apostrCount = Utils.CharacterNo(text, punctuationChar);
             relativeCount = (perWord ? Utils.ExtractWords(text) : Utils.ExtractSentences(text)).Count();
-        }
-
-
-        private double NormalDistributionProbability(double x, double mean, double variance)
-        {
-            return Math.Exp(-0.5 * Math.Pow(x - mean, 2) / variance) / (Math.Sqrt(variance * 2 * Math.PI));
         }
 
     }

@@ -66,10 +66,7 @@ namespace Text_classifier.Classification
             tokens.RemoveWhere(e => this.stopWords.Contains(e));
 
             double logProb1 = CalculateSampleLogProbability(tokens, this.logProbabilities1);
-            // Console.WriteLine("Probability 1: " + Math.Exp(logProb1) + " = e^"+logProb1);
-            
             double logProb2 = CalculateSampleLogProbability(tokens, this.logProbabilities2);
-            // Console.WriteLine("Probability 2: " + Math.Exp(logProb2) + " = e^" + logProb2);
 
             // numerically safer calculation for (-1*p1 + 1*p2)/(p1 + p2)
             double logDiff = logProb1 - logProb2;
